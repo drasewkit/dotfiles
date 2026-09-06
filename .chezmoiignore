@@ -9,6 +9,10 @@ LICENSE
 .ssh/**
 .gnupg/**
 .config/gh/hosts.yml
+.config/bitbucket/**
+.netrc
+.claude.json
+.mysql_history
 
 # --- Work-local, machine-local overrides (D6) ---
 .config/local/**
