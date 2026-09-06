@@ -1,0 +1,25 @@
+# Target paths chezmoi must never manage. Paths are relative to $HOME.
+
+# --- Repo meta (live in the source repo, not the home dir) ---
+README.md
+LICENSE
+.github/**
+
+# --- Secrets / credentials (regenerated per machine, D5) ---
+.ssh/**
+.gnupg/**
+.config/gh/hosts.yml
+
+# --- Work-local, machine-local overrides (D6) ---
+.config/local/**
+.claude/settings.local.json
+
+# --- History / state / caches (not portable) ---
+.cache/**
+.local/state/**
+.config/zsh/.zsh_history
+.config/zsh/.zcompdump*
+.config/zsh/.zcompdump*.zwc
+
+# --- OS cruft ---
+**/.DS_Store

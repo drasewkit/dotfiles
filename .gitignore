@@ -1,0 +1,5 @@
+.DS_Store
+
+# chezmoi age/secret key material — never commit even if age is enabled later (D5)
+key.txt
+*.age
