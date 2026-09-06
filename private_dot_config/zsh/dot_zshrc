@@ -1,0 +1,43 @@
+# ~/.config/zsh/.zshrc — interactive shell setup.
+
+# 1. Options / history (runs after /etc/zshrc, which forces HISTSIZE=2000).
+source "$ZRCDIR/option.zsh"
+
+# 2. fpath: Homebrew site-functions + our autoloaded functions, before compinit.
+fpath=(
+  ${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh/site-functions(N)
+  "$ZRCDIR/functions"(N)
+  $fpath
+)
+autoload -Uz "$ZRCDIR"/functions/*(.N:t)
+
+# 3. Keybindings (completion-independent).
+source "$ZRCDIR/bindkey.zsh"
+
+# 4. Plugins via sheldon (zeno, zsh-completions, fast-syntax-highlighting, autosuggestions).
+_zcache sheldon 'sheldon source' "$XDG_CONFIG_HOME/sheldon/plugins.toml" "$commands[sheldon]"
+
+# 5. Completion system (after sheldon so zsh-completions is on fpath).
+source "$ZRCDIR/completion.zsh"
+
+# 6. Aliases.
+source "$ZRCDIR/alias.zsh"
+
+# 7. Plugin config needing loaded widgets (zeno keybindings).
+source "$ZRCDIR/pluginconfig/zeno.zsh"
+
+# 8. Node via nvm — lazy-loaded (see rc/pluginconfig/nvm.zsh).
+source "$ZRCDIR/pluginconfig/nvm.zsh"
+
+# 9. Prompt.
+_zcache starship 'starship init zsh' "$XDG_CONFIG_HOME/starship.toml" "$commands[starship]"
+
+# 10. Ensure user bin dirs win over Homebrew/path_helper (brew shellenv runs
+#     path_helper, which rebuilds PATH and drops these behind system entries).
+path=($HOME/.local/bin $HOME/bin(N) $path)
+
+# 11. Work-local overrides — gitignored, never in the dotfiles repo.
+if [[ -d "$LOCAL_ZSH_DIR" ]]; then
+  for f in "$LOCAL_ZSH_DIR"/*.zsh(N); do source "$f"; done
+  unset f
+fi

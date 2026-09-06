@@ -1,0 +1,19 @@
+# sheldon configuration — https://github.com/rossmacarthur/sheldon
+# Load order: zeno (sync) -> zsh-completions (fpath, before compinit)
+#             -> fast-syntax-highlighting -> zsh-autosuggestions
+
+shell = "zsh"
+
+[plugins]
+
+[plugins.zeno]
+github = "yuki-yano/zeno.zsh"
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+
+[plugins.fast-syntax-highlighting]
+github = "zdharma-continuum/fast-syntax-highlighting"
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"

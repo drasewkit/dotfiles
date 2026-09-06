@@ -1,0 +1,54 @@
+# ~/.config/zsh/.zshenv — always sourced, keep cheap and non-interactive-safe.
+
+# XDG Base Directory
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# zsh layout
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ZRCDIR="$ZDOTDIR/rc"
+export LOCAL_ZSH_DIR="$XDG_CONFIG_HOME/local/zsh"
+
+# Locale
+export LANG="${LANG:-en_US.UTF-8}"
+
+# Editor / pager  (was 'nano' under prezto's default; switched to nvim per plan)
+export EDITOR=nvim
+export VISUAL=nvim
+export PAGER=less
+export LESS='-g -i -M -R -S -w -z-4'
+
+# Cache a slow generator's output, byte-compile it, source it. Regenerate when the
+# cache is missing or any dependency path is newer.  _zcache <name> <gen> [dep...]
+#
+# NOTE: the cache is sourced in the caller's option scope on purpose — init
+# scripts like `starship init zsh` and `sheldon source` run `setopt` (e.g.
+# promptsubst) that must persist. Only the freshness check runs under
+# `emulate -L zsh` (via the anon function), so its LOCAL_OPTIONS don't revert
+# what the sourced script sets.
+_zcache() {
+  local name=$1 gen=$2; shift 2
+  local cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/${name}.zsh"
+  () {
+    emulate -L zsh
+    local dep stale=0
+    [[ -r $cache ]] || stale=1
+    for dep in "$@"; do [[ -n $dep && $dep -nt $cache ]] && stale=1; done
+    if (( stale )); then
+      mkdir -p "${cache:h}"
+      eval "$gen" >| "$cache" 2>/dev/null
+      zcompile "$cache" 2>/dev/null
+    fi
+  } "$@"
+  source "$cache"
+}
+
+# Base PATH. Homebrew and other login-time entries live in .zprofile.
+typeset -gU path fpath
+path=(
+  $HOME/.local/bin(N)
+  $HOME/{,s}bin(N)
+  $path
+)

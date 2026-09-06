@@ -1,0 +1,44 @@
+{
+  "title": "HHKB Cmd Kana + Fn",
+  "rules": [
+    {
+      "description": "Left Cmd = Eisu, Right Cmd tap = Kana, hold = Fn",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_command",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to_if_alone": [
+            { "key_code": "japanese_eisuu" }
+          ],
+          "to": [
+            { "key_code": "left_command", "lazy": true }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "right_command",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to_if_alone": [
+            { "key_code": "japanese_kana" }
+          ],
+          "to_if_held_down": [
+            { "key_code": "fn" }
+          ],
+          "parameters": {
+            "basic.to_if_alone_timeout_milliseconds": 200,
+            "basic.to_if_held_down_threshold_milliseconds": 200
+          }
+        }
+      ]
+    }
+  ]
+}

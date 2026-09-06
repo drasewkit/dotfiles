@@ -1,0 +1,32 @@
+# nb add article - Add a note with article title and URL
+# Usage: nba <url>           - Auto-fetch title from URL
+#        nba <title> <url>   - Use specified title
+if [ $# -lt 1 ]; then
+  echo "Usage: nba <url>           # Auto-fetch title"
+  echo "       nba <title> <url>   # Manual title"
+  return 1
+fi
+
+local title="" url=""
+
+if [ $# -eq 1 ]; then
+  url="$1"
+  echo "Fetching title from: $url"
+  title=$(curl -sL --max-redirs 3 --max-time 5 --compressed "$url" | head -c 512 | perl -0777 -ne 'print $1 if /<title[^>]*>([^<]+)<\/title>/i')
+  title=$(echo "$title" | perl -pe 's/^\s+|\s+$//g; s/\s+/ /g')
+  if [ -z "$title" ]; then
+    echo "Error: Could not fetch title from URL"
+    return 1
+  fi
+  echo "Title: $title"
+else
+  title="$1"
+  url="$2"
+fi
+
+local content="# ${title}
+
+参照: [${title}](${url})"
+
+nb add --filename "${title}.md" --content "$content"
+echo "Note created: [${title}](${url})"

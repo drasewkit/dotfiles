@@ -18,6 +18,9 @@ LICENSE
 .config/local/**
 .claude/settings.local.json
 
+# --- Auto-generated / tool-managed (regenerated on a new machine) ---
+.config/karabiner/automatic_backups/**
+
 # --- History / state / caches (not portable) ---
 .cache/**
 .local/state/**

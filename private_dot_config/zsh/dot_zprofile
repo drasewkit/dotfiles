@@ -1,0 +1,9 @@
+# ~/.config/zsh/.zprofile — login shells only.
+
+# Docker Desktop
+[[ ":$PATH:" != *":$HOME/.docker/bin:"* ]] && export PATH="$PATH:$HOME/.docker/bin"
+
+# Homebrew (cached: sets PATH, MANPATH, INFOPATH, HOMEBREW_*, FPATH additions)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  _zcache brew-shellenv '/opt/homebrew/bin/brew shellenv' /opt/homebrew/bin/brew
+fi

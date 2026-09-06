@@ -1,0 +1,11 @@
+[user]
+	name = tkdisk
+	email = d.takaku49@gmail.com
+[init]
+	defaultBranch = main
+# ghq は「最後の root」を primary（ghq get のクローン先）にする。
+# 現状の primary は ~/src（personal）。順序を入れ替えると primary が反転するので注意。
+# 確認: ghq root / ghq root --all
+[ghq]
+	root = ~/work/src
+	root = ~/src

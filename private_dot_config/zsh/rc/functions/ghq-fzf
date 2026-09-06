@@ -1,0 +1,11 @@
+# ghq + fzf: fuzzy-pick a repository and cd into it (preview: README or git log).
+# Bound to Ctrl-] in rc/bindkey.zsh.
+local dir
+dir=$(ghq list --full-path | fzf \
+  --reverse --height=80% --border \
+  --prompt='ghq cd> ' \
+  --preview='if [ -r {}/README.md ]; then bat --color=always --style=plain --line-range=:80 {}/README.md; else git -C {} -c color.ui=always log --oneline -n 20 2>/dev/null || ls -la {}; fi' \
+  --preview-window='right:60%:wrap' \
+  --bind='ctrl-/:toggle-preview,ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down') || return
+BUFFER="cd ${(q)dir}"
+zle accept-line
