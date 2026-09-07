@@ -45,7 +45,7 @@ require("lazy").setup({
         -- "netrwPlugin",
         "tarPlugin",
         "tohtml",
-        "tutor",
+        -- "tutor",  -- :Tutor（vim 入門チュートリアル）を使うため有効化
         "zipPlugin",
       },
     },
