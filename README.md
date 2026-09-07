@@ -3,6 +3,8 @@
 Personal macOS dotfiles, managed with [chezmoi](https://chezmoi.io).
 Private for now — no secrets live here (see [What's *not* here](#whats-not-here)).
 
+New to chezmoi / this setup? Read [`docs/chezmoi.md`](docs/chezmoi.md).
+
 - **Source dir:** `~/src/github.com/drasewkit/dotfiles` (ghq layout, reachable via `Ctrl-]`)
 - **chezmoi config:** `~/.config/chezmoi/chezmoi.toml` — generated from [`.chezmoi.toml.tmpl`](.chezmoi.toml.tmpl), never committed
 - **Shell:** zsh under `~/.config/zsh` (`ZDOTDIR`), plugins via sheldon, prompt via starship — see [shell notes](#shell)
