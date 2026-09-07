@@ -1,0 +1,26 @@
+#!/bin/sh
+# chezmoi modify_ script: layer portable Claude Code preferences over the
+# existing ~/.claude/settings.json WITHOUT touching anything else in it.
+#
+# Why a modify_ script and not a plain template: this file also holds
+# `autoMode` (work-specific classifier rules + environment) which Claude Code
+# reads ONLY from settings.json — it does NOT merge autoMode from
+# settings.local.json. That content is confidential (see .chezmoiignore) and
+# must never enter this repo, and Claude Code rewrites it in place when you
+# edit rules via /permissions. So we merge our keys in and leave the rest
+# (autoMode, any hooks, anything Claude Code adds) exactly as found.
+#
+# Needs `jq` on PATH (Brewfile installs it; bootstrap runs brew first).
+set -e
+
+input="$(cat)"
+[ -n "$input" ] || input='{}'
+
+printf '%s\n' "$input" | jq '. * {
+  theme: "dark",
+  effortLevel: "high",
+  agentPushNotifEnabled: true,
+  inputNeededNotifEnabled: true,
+  enabledPlugins: { "figma@claude-plugins-official": true },
+  permissions: { additionalDirectories: ["{{ .chezmoi.homeDir }}/src/github.com/drasewkit/nb"] }
+}'
