@@ -1,0 +1,11 @@
+{{/*
+Written to ~/.config/chezmoi/chezmoi.toml on `chezmoi init`.
+The source lives under the ghq tree so Ctrl-] fzf reaches it like any repo;
+bootstrap.sh clones it there and points `chezmoi init --source` at it.
+*/ -}}
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[git]
+    # History is audited before the repo goes public (D2); commit/push stay manual.
+    autoCommit = false
+    autoPush   = false

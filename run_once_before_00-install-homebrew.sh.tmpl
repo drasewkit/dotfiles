@@ -1,0 +1,23 @@
+#!/bin/sh
+# Install Homebrew if it is missing. Runs once (chezmoi tracks by content hash).
+# `before` so later scripts and the modify_ scripts (which need jq) have brew.
+set -eu
+
+{{ if eq .chezmoi.os "darwin" -}}
+if command -v brew >/dev/null 2>&1; then
+    exit 0
+fi
+
+echo "==> Installing Homebrew"
+NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Put brew on PATH for the rest of this chezmoi run (Apple Silicon path).
+if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+{{- else -}}
+echo "Not macOS — skipping Homebrew."
+{{- end }}

@@ -4,6 +4,9 @@
 README.md
 LICENSE
 .github/**
+Brewfile
+bootstrap.sh
+docs/**
 
 # --- Secrets / credentials (regenerated per machine, D5) ---
 .ssh/**

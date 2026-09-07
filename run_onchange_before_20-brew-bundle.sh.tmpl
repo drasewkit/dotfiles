@@ -1,0 +1,27 @@
+#!/bin/sh
+# Install everything in the Brewfile. Re-runs whenever the Brewfile changes
+# (the hash below is what chezmoi watches).
+#
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+set -eu
+
+{{ if ne .chezmoi.os "darwin" -}}
+echo "Not macOS — skipping brew bundle."
+exit 0
+{{- end }}
+
+if ! command -v brew >/dev/null 2>&1; then
+    for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+        [ -x "$p" ] && eval "$("$p" shellenv)" && break
+    done
+fi
+command -v brew >/dev/null 2>&1 || { echo "brew not found; aborting"; exit 1; }
+
+# Third-party tap for nb / rumdl needs an explicit trust on newer Homebrew.
+brew tap xwmx/taps >/dev/null 2>&1 || true
+
+echo "==> brew bundle"
+brew bundle --file={{ .chezmoi.sourceDir | quote }}/Brewfile --no-upgrade || {
+    echo "!! Some packages failed to install — re-run 'chezmoi apply' or"
+    echo "   'brew bundle --file={{ .chezmoi.sourceDir }}/Brewfile' after fixing."
+}
