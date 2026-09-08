@@ -6,3 +6,13 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
+-- nb ノートは日本語＋ローマ字の技術用語が中心で、英語スペルチェックはノイズに
+-- なるだけなので markdown / text では無効化する（wrap は LazyVim 標準のまま残す）。
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("user_nospell", { clear = true }),
+  pattern = { "markdown", "text" },
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
