@@ -92,7 +92,7 @@ chezmoi add --template ~/.config/newapp/config.toml # 絶対パス等をテン�
 | 種類 | どうするか |
 |---|---|
 | 秘密（token / 鍵 / `.env`） | `.chezmoiignore` に追加。実体はパスワードマネージャや手動再生成 |
-| work 固有・マシン固有 | `~/.config/local/*.zsh` 等の gitignore された local ファイルへ |
+| 環境固有・マシン固有 | `~/.config/local/*.zsh` 等の gitignore された local ファイルへ |
 | `/Users/tkdisk/...` を含む | `--template` で追加し `{{ .chezmoi.homeDir }}` に置換 |
 | 普通の可搬設定 | そのまま `chezmoi add` |
 
@@ -104,7 +104,7 @@ chezmoi add --template ~/.config/newapp/config.toml # 絶対パス等をテン�
 ```sh
 chezmoi cd                   # = cd ~/src/github.com/drasewkit/dotfiles（サブシェル）
 git add -A
-git diff --cached            # ★秘密・work パスの混入チェック（毎回）
+git diff --cached            # ★秘密・環境固有パスの混入チェック（毎回）
 git commit -m "..."
 git push
 exit                         # サブシェルを抜ける
@@ -144,7 +144,7 @@ chezmoi cat ~/.claude/settings.json    # この target の最終形を表示
 普通のテンプレートは target を**全置換**する。だが `~/.claude/settings.json` は
 
 - **可搬な部分**（theme, effortLevel など）→ このリポジトリで管理したい
-- **`autoMode`**（work 用の auto-mode 分類ルール・機密）→ Claude Code が
+- **`autoMode`**（特定リポジトリ用の auto-mode 分類ルール・機密）→ Claude Code が
   `/permissions` 編集時にこのファイルへ書き込む。リポジトリには絶対入れたくない
 
 という2種類が同居している。そこで `modify_settings.json.tmpl` を使う。
@@ -203,7 +203,7 @@ chezmoi cat ~/.claude/settings.json | jq 'keys'
 | **autoCommit / autoPush** | off。コミット前に目視スキャンしたいため |
 | **`~/.claude/settings.json`** | `modify_` スクリプトで可搬キーのみマージ。`autoMode` は触らない |
 | **`~/.claude/settings.local.json`** | `.chezmoiignore`。Claude Code が「always allow」を書き込む先。個人的な WebFetch 許可ドメインなどが入る |
-| **`~/.gitconfig` の `~/work/src`** | そのまま管理（work の内容ではなくパス文字列のみ・機密ではない） |
+| **`~/.gitconfig` の `~/work/src`** | そのまま管理（パス文字列のみ。ディレクトリの中身は一切含まない） |
 | **nb の rumdl フォーマッタ hook** | テンプレート化を断念（シェルのクオートが壊れやすい）。新マシンでは README の JSON を手で `~/.claude/settings.json` に追記 |
 | **`.nbrc` / `.nuxtrc` / `.yarnrc`** | 管理しない（ツールが自動生成・書き換えるため） |
 
@@ -225,7 +225,7 @@ sh ~/src/github.com/drasewkit/dotfiles/bootstrap.sh
 その後の手動作業（README「Manual follow-ups」）:
 - シェル再起動、Karabiner の Input Monitoring 許可
 - `claude` / `gh auth login` / Slack 等サインイン
-- work repo 用の auto-mode ルールを `/permissions` で再登録
+- 特定リポジトリ用の auto-mode ルールを `/permissions` で再登録
 - nb hook を `~/.claude/settings.json` に手で追記
 
 ---

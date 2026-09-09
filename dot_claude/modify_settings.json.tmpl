@@ -3,7 +3,7 @@
 # existing ~/.claude/settings.json WITHOUT touching anything else in it.
 #
 # Why a modify_ script and not a plain template: this file also holds
-# `autoMode` (work-specific classifier rules + environment) which Claude Code
+# `autoMode` (environment-specific classifier rules) which Claude Code
 # reads ONLY from settings.json — it does NOT merge autoMode from
 # settings.local.json. That content is confidential (see .chezmoiignore) and
 # must never enter this repo, and Claude Code rewrites it in place when you

@@ -1,7 +1,7 @@
 # dotfiles
 
 Personal macOS dotfiles, managed with [chezmoi](https://chezmoi.io).
-Private for now — no secrets live here (see [What's *not* here](#whats-not-here)).
+No secrets live here (see [What's *not* here](#whats-not-here)).
 
 New to chezmoi / this setup? Read [`docs/chezmoi.md`](docs/chezmoi.md).
 
@@ -31,7 +31,7 @@ ssh -T git@github.com                    # should greet you as "drasewkit"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/drasewkit/dotfiles/main/bootstrap.sh)"
 ```
 
-Private repo, so the raw URL needs auth — easier path is a manual clone then run it:
+Or clone first and run it from the tree:
 
 ```sh
 git clone git@github.com:drasewkit/dotfiles.git ~/src/github.com/drasewkit/dotfiles
@@ -46,7 +46,7 @@ sh ~/src/github.com/drasewkit/dotfiles/bootstrap.sh
 - Restart the shell for zsh / starship / sheldon.
 - Karabiner-Elements: grant Input Monitoring.
 - Sign in: `claude`, `gh auth login`, Slack, ChatGPT, Spotify, …
-- Claude Code auto-mode rules for work repos: re-add via `/permissions` (see [Claude Code](#claude-code)).
+- Claude Code auto-mode rules for certain repos: re-add via `/permissions` (see [Claude Code](#claude-code)).
 
 ## What chezmoi manages
 
@@ -74,7 +74,7 @@ sh ~/src/github.com/drasewkit/dotfiles/bootstrap.sh
 `.chezmoiignore` keeps these out; they're recreated per machine:
 
 - **Secrets:** `~/.ssh`, `~/.gnupg`, `~/.config/gh/hosts.yml`, `~/.config/bitbucket/**`, `~/.netrc`, `~/.claude.json`
-- **Work-/machine-local:** `~/.config/local/**`, `~/.claude/settings.local.json`
+- **Machine-/env-local:** `~/.config/local/**`, `~/.claude/settings.local.json`
 - **Auto-generated:** karabiner `automatic_backups/`, zsh history & compdump, caches
 - **Tool-managed rc files:** `~/.nbrc` (nb rewrites it), `~/.nuxtrc`, `~/.yarnrc`
 
@@ -86,7 +86,7 @@ sh ~/src/github.com/drasewkit/dotfiles/bootstrap.sh
 - **Portable** (merged in by chezmoi): `theme`, `effortLevel`, notification toggles,
   the figma plugin, and the `nb` `additionalDirectory`.
 - **Local / confidential** (left untouched): `autoMode` — the auto-mode classifier
-  rules and environment for work repos. Claude Code reads `autoMode` **only** from
+  rules and environment for certain repos. Claude Code reads `autoMode` **only** from
   `settings.json` (not `settings.local.json`), and rewrites it in place when you edit
   rules via `/permissions`. It never enters this repo. Re-create it on a new machine
   through `/permissions` → *Auto mode*.
