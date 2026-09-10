@@ -80,8 +80,17 @@ config.default_cursor_style = "SteadyBar"
 
 config.font = wezterm.font_with_fallback({
     {
-        family = "JetBrainsMono Nerd Font",
-        harfbuzz_features = { "zero" },
+        family = "Moralerspace Neon", -- Moralerspace v2: Nerd Fonts / IBM Plex Sans JP 標準搭載
+        harfbuzz_features = {
+            -- テクスチャヒーリング + 繰り返し文字の間隔調整
+            "calt=1", "liga=1", "clig=1",
+            -- コーディングリガチャ全群 (ss01:= / ss02:<= >= / ss03:-> / ss04:</> /
+            --   ss05:|> / ss06:## ++ / ss07::: / ss08:.. / ss09:<=>)
+            "ss01=1", "ss02=1", "ss03=1", "ss04=1", "ss05=1",
+            "ss06=1", "ss07=1", "ss08=1", "ss09=1",
+            -- 0 をスラッシュゼロに (2=slash / 3=reverse / 4=cut-out)
+            "cv01=2",
+        },
     },
     "Hiragino Sans",
     "Apple Color Emoji",
