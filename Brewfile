@@ -30,10 +30,14 @@ brew "gh"
 brew "ghq"
 # Distributed revision control system
 brew "git"
+# Tools and libraries to manipulate images in select formats
+brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Simple terminal UI for git commands
 brew "lazygit"
+# CLI for Mermaid library
+brew "mermaid-cli"
 # Open source relational database management system
 brew "mysql"
 # CLI note-taking, bookmarking, and knowledge base (xwmx/taps)
