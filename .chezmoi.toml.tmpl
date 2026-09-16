@@ -6,6 +6,7 @@ bootstrap.sh clones it there and points `chezmoi init --source` at it.
 sourceDir = {{ .chezmoi.sourceDir | quote }}
 
 [git]
-    # History is audited before the repo goes public (D2); commit/push stay manual.
-    autoCommit = false
+    # Repo is public (D2); autoCommit is local-only so it's low-risk, but
+    # autoPush stays manual so a diff gets reviewed before it reaches GitHub.
+    autoCommit = true
     autoPush   = false
