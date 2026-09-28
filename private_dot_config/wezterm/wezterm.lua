@@ -7,6 +7,9 @@ config.use_ime = true
 config.window_background_opacity = 0.85
 config.macos_window_background_blur = 20
 
+-- ProMotion(120Hz)に合わせて描画上限を引き上げ (デフォルト60)
+config.max_fps = 120
+
 -- タイトルバーを非表示にする
 config.window_decorations = "RESIZE"
 
