@@ -24,11 +24,6 @@ config.window_frame = {
 
 config.use_fancy_tab_bar= true
 
-config.window_frame = {
-    inactive_titlebar_bg = "none",
-    active_titlebar_bg = "none",
-}
-
 config.window_background_gradient = {
     colors = { "#000000" },
 }
