@@ -1,29 +1,29 @@
 # dotfiles
 
-Personal macOS dotfiles, managed with [chezmoi](https://chezmoi.io).
-No secrets live here (see [What's *not* here](#whats-not-here)).
+[chezmoi](https://chezmoi.io) で管理している個人用の macOS dotfiles です。
+シークレットは一切含みません（[管理対象外のもの](#管理対象外のもの) を参照）。
 
-New to chezmoi / this setup? Read [`docs/chezmoi.md`](docs/chezmoi.md).
+chezmoi やこの構成に初めて触れる場合は [`docs/chezmoi.md`](docs/chezmoi.md) を読んでください。
 
-- **Source dir:** `~/src/github.com/drasewkit/dotfiles` (ghq layout, reachable via `Ctrl-]`)
-- **chezmoi config:** `~/.config/chezmoi/chezmoi.toml` — generated from [`.chezmoi.toml.tmpl`](.chezmoi.toml.tmpl), never committed
-- **Shell:** zsh under `~/.config/zsh` (`ZDOTDIR`), plugins via sheldon, prompt via starship — see [shell notes](#shell)
+- **ソースディレクトリ:** `~/src/github.com/drasewkit/dotfiles`（ghq レイアウト、`Ctrl-]` で移動可能）
+- **chezmoi 設定:** `~/.config/chezmoi/chezmoi.toml` — [`.chezmoi.toml.tmpl`](.chezmoi.toml.tmpl) から生成され、コミットはしない
+- **シェル:** zsh（`~/.config/zsh` を `ZDOTDIR` に設定）、プラグインは sheldon、プロンプトは starship — [シェルについて](#シェル) を参照
 
-## New machine
+## 新しいマシンのセットアップ
 
-Do the SSH step first, then run the bootstrap.
+先に SSH の手順を済ませてから bootstrap を実行します。
 
-### 1. SSH key (regenerated per machine — D5)
+### 1. SSH 鍵（マシンごとに再生成 — D5）
 
-Keys are **never** stored in this repo. On the new Mac:
+鍵はこのリポジトリに**絶対に**保存しません。新しい Mac で:
 
 ```sh
 ssh-keygen -t ed25519 -C "d.takaku49@gmail.com"
-pbcopy < ~/.ssh/id_ed25519.pub          # paste at github.com/settings/keys
-ssh -T git@github.com                    # should greet you as "drasewkit"
+pbcopy < ~/.ssh/id_ed25519.pub          # github.com/settings/keys に貼り付け
+ssh -T git@github.com                    # "drasewkit" として挨拶されれば OK
 ```
 
-`gh auth login` (after Homebrew) sets the same key up for `gh` and switches git to SSH.
+（Homebrew 導入後に）`gh auth login` を実行すると、同じ鍵が `gh` にも設定され、git が SSH に切り替わります。
 
 ### 2. Bootstrap
 
@@ -31,71 +31,70 @@ ssh -T git@github.com                    # should greet you as "drasewkit"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/drasewkit/dotfiles/main/bootstrap.sh)"
 ```
 
-Or clone first and run it from the tree:
+または、先に clone してからツリー内で実行します:
 
 ```sh
 git clone git@github.com:drasewkit/dotfiles.git ~/src/github.com/drasewkit/dotfiles
 sh ~/src/github.com/drasewkit/dotfiles/bootstrap.sh
 ```
 
-[`bootstrap.sh`](bootstrap.sh) installs Xcode CLT → Homebrew → chezmoi, clones here, and runs
-`chezmoi init --apply`. On apply, chezmoi runs the scripts below and writes all managed files.
+[`bootstrap.sh`](bootstrap.sh) は Xcode CLT → Homebrew → chezmoi の順にインストールし、ここに clone して
+`chezmoi init --apply` を実行します。apply 時に chezmoi が下記のスクリプトを実行し、管理対象のファイルをすべて書き出します。
 
-### 3. Manual follow-ups
+### 3. 手動で行う後処理
 
-- Restart the shell for zsh / starship / sheldon.
-- Karabiner-Elements: grant Input Monitoring.
-- Sign in: `claude`, `gh auth login`, Slack, ChatGPT, Spotify, …
-- Claude Code auto-mode rules for certain repos: re-add via `/permissions` (see [Claude Code](#claude-code)).
+- zsh / starship / sheldon を反映させるためにシェルを再起動する。
+- Karabiner-Elements: 入力監視（Input Monitoring）を許可する。
+- サインイン: `claude`、`gh auth login`、Slack、ChatGPT、Spotify など。
+- 特定リポジトリ向けの Claude Code auto-mode ルール: `/permissions` から再登録する（[Claude Code](#claude-code) を参照）。
 
-## What chezmoi manages
+## chezmoi で管理しているもの
 
-| Area | Target |
+| 領域 | 対象 |
 |---|---|
 | zsh | `~/.config/zsh/{.zshenv,.zprofile,.zshrc,rc/**}` |
-| prompt / plugins | `~/.config/{starship.toml,sheldon/plugins.toml,zeno/config.yml}` |
-| editor | `~/.config/nvim/**` (LazyVim base, `lazy-lock.json` pinned) |
-| terminal | `~/.config/wezterm/wezterm.lua` |
-| keyboard | `~/.config/karabiner/{karabiner.json,assets/**}` |
-| git | `~/.gitconfig`, `~/.config/git/ignore` |
+| プロンプト / プラグイン | `~/.config/{starship.toml,sheldon/plugins.toml,zeno/config.yml}` |
+| エディタ | `~/.config/nvim/**`（LazyVim ベース、`lazy-lock.json` で固定） |
+| ターミナル | `~/.config/wezterm/wezterm.lua` |
+| キーボード | `~/.config/karabiner/{karabiner.json,assets/**}` |
+| git | `~/.gitconfig`、`~/.config/git/ignore` |
 | GitHub CLI | `~/.config/gh/config.yml` |
-| Claude Code | `~/.claude/settings.json` (portable keys only — see below) |
-| packages | [`Brewfile`](Brewfile) via `run_onchange_before_20-brew-bundle.sh.tmpl` |
+| Claude Code | `~/.claude/settings.json`（ポータブルなキーのみ — 後述） |
+| パッケージ | [`Brewfile`](Brewfile)（`run_onchange_before_20-brew-bundle.sh.tmpl` 経由） |
 
-### Scripts (run on `chezmoi apply`)
+### スクリプト（`chezmoi apply` 時に実行）
 
-- `run_once_before_00-install-homebrew.sh.tmpl` — installs Homebrew if missing.
-- `run_onchange_before_20-brew-bundle.sh.tmpl` — `brew bundle` when the Brewfile changes.
-  Regenerate the baseline with `brew bundle dump --file=- --force`, then re-add the
-  hand-kept CLI tools listed under `# ── CLI` (they aren't "installed on request").
+- `run_once_before_00-install-homebrew.sh.tmpl` — Homebrew が無ければインストールする。
+- `run_onchange_before_20-brew-bundle.sh.tmpl` — Brewfile が変更されたときに `brew bundle` を実行する。
+  ベースラインは `brew bundle dump --file=- --force` で再生成し、その後 `# ── CLI` 以下に
+  手動で管理している CLI ツールを追加し直す（これらは「明示的にインストールしたもの」扱いにならないため）。
 
-## What's *not* here
+## 管理対象外のもの
 
-`.chezmoiignore` keeps these out; they're recreated per machine:
+`.chezmoiignore` で以下を除外しており、マシンごとに作り直します:
 
-- **Secrets:** `~/.ssh`, `~/.gnupg`, `~/.config/gh/hosts.yml`, `~/.config/bitbucket/**`, `~/.netrc`, `~/.claude.json`
-- **Machine-/env-local:** `~/.config/local/**`, `~/.claude/settings.local.json`
-- **Auto-generated:** karabiner `automatic_backups/`, zsh history & compdump, caches
-- **Tool-managed rc files:** `~/.nbrc` (nb rewrites it), `~/.nuxtrc`, `~/.yarnrc`
+- **シークレット:** `~/.ssh`、`~/.gnupg`、`~/.config/gh/hosts.yml`、`~/.config/bitbucket/**`、`~/.netrc`、`~/.claude.json`
+- **マシン / 環境固有:** `~/.config/local/**`、`~/.claude/settings.local.json`
+- **自動生成:** karabiner の `automatic_backups/`、zsh の履歴と compdump、各種キャッシュ
+- **ツールが管理する rc ファイル:** `~/.nbrc`（nb が書き換える）、`~/.nuxtrc`、`~/.yarnrc`
 
 ## Claude Code
 
-`~/.claude/settings.json` holds two kinds of content, so it is managed by
-**`dot_claude/modify_settings.json.tmpl`** — a `jq` merge, not a full-file template:
+`~/.claude/settings.json` には性質の異なる 2 種類の内容が含まれるため、ファイル全体のテンプレートではなく
+`jq` によるマージである **`dot_claude/modify_settings.json.tmpl`** で管理しています:
 
-- **Portable** (merged in by chezmoi): `theme`, `effortLevel`, notification toggles,
-  the figma plugin, and the `nb` `additionalDirectory`.
-- **Local / confidential** (left untouched): `autoMode` — the auto-mode classifier
-  rules and environment for certain repos. Claude Code reads `autoMode` **only** from
-  `settings.json` (not `settings.local.json`), and rewrites it in place when you edit
-  rules via `/permissions`. It never enters this repo. Re-create it on a new machine
-  through `/permissions` → *Auto mode*.
+- **ポータブル**（chezmoi がマージする）: `theme`、`effortLevel`、通知のトグル、
+  figma プラグイン、`nb` の `additionalDirectory`。
+- **ローカル / 機密**（手を加えない）: `autoMode` — 特定リポジトリ向けの auto-mode 分類ルールと環境設定。
+  Claude Code は `autoMode` を `settings.json` から**のみ**読み込み（`settings.local.json` からは読まない）、
+  `/permissions` でルールを編集するとその場で書き換えます。このリポジトリには一切入れません。
+  新しいマシンでは `/permissions` → *Auto mode* から作り直してください。
 
-### nb markdown formatter hook (not templated)
+### nb の Markdown フォーマッタ hook（テンプレート化していない）
 
-The `PostToolUse` hook that runs `rumdl fmt` on `*.md` under the `nb` repo is **not**
-in the template (its shell quoting is too fragile to round-trip). Re-add it to
-`~/.claude/settings.json` by hand on a new machine:
+`nb` リポジトリ配下の `*.md` に対して `rumdl fmt` を実行する `PostToolUse` hook は、
+テンプレートに**含めていません**（シェルのクォートが壊れやすく、往復変換に耐えないため）。
+新しいマシンでは `~/.claude/settings.json` に手動で追加してください:
 
 ```json
 "hooks": {
@@ -109,21 +108,21 @@ in the template (its shell quoting is too fragile to round-trip). Re-add it to
 }
 ```
 
-## Shell
+## シェル
 
-prezto was removed; layout is `~/.config/zsh/rc/` split files + sheldon
-(`zeno`, `fast-syntax-highlighting`, `zsh-autosuggestions`, `zsh-completions`).
-History search is prefix-match on `↑`/`↓`; fuzzy history is `Ctrl-r` (zeno).
-Startup ≈ 75 ms (nvm lazy-loaded, `brew`/`sheldon`/`starship` init cached under
-`~/.cache/zsh/` by the `_zcache` helper in `.zshenv`).
+prezto は削除済みで、`~/.config/zsh/rc/` の分割ファイル + sheldon
+（`zeno`、`fast-syntax-highlighting`、`zsh-autosuggestions`、`zsh-completions`）という構成です。
+履歴検索は `↑`/`↓` で前方一致、あいまい検索は `Ctrl-r`（zeno）です。
+起動時間は約 75 ms（nvm は遅延ロード、`brew`/`sheldon`/`starship` の初期化結果は
+`.zshenv` 内の `_zcache` ヘルパーによって `~/.cache/zsh/` にキャッシュ）。
 
-## Everyday chezmoi
+## 日常的な chezmoi の操作
 
 ```sh
-chezmoi edit ~/.zshrc      # edit the source of a managed file
-chezmoi add  ~/.foo        # start managing a new file
-chezmoi diff               # what apply would change
-chezmoi apply              # apply pending changes
-chezmoi cd && git ...      # commit / push the source repo (autoCommit/Push are off)
-zcache-clear               # drop the cached shell-init blobs
+chezmoi edit ~/.zshrc      # 管理対象ファイルのソースを編集
+chezmoi add  ~/.foo        # 新しいファイルを管理対象に追加
+chezmoi diff               # apply で何が変わるかを確認
+chezmoi apply              # 保留中の変更を適用
+chezmoi cd && git ...      # ソースリポジトリを commit / push（autoCommit/Push は無効）
+zcache-clear               # キャッシュしたシェル初期化結果を削除
 ```
