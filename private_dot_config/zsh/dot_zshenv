@@ -56,3 +56,13 @@ path=(
   $HOME/{,s}bin(N)
   $path
 )
+
+# Claude Code の Bash ツールの中だけ、zsh を bash に近づける (2026-10-08)。
+# Bash ツールは `/bin/zsh -c "source <shell-snapshots/...> && ..."` で動き、このファイルを読む。
+# ターミナルの zsh と、Claude から起動した zsh スクリプトには効かない (ZSH_EXECUTION_STRING で絞る)。
+#   NO_EQUALS: `echo ===` が「= で始まる語」として展開されて落ちるのを防ぐ
+#   NO_NOMATCH: 当たらないグロブ (`--include=*.md` など) を、エラーにせずそのまま渡す
+#   SH_WORD_SPLIT: `for t in $T` を bash と同じく空白で分ける
+if [[ -n $CLAUDECODE && $ZSH_EXECUTION_STRING == *shell-snapshots* ]]; then
+  setopt NO_EQUALS NO_NOMATCH SH_WORD_SPLIT
+fi
