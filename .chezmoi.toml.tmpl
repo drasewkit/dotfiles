@@ -10,3 +10,5 @@ sourceDir = {{ .chezmoi.sourceDir | quote }}
     # autoPush stays manual so a diff gets reviewed before it reaches GitHub.
     autoCommit = true
     autoPush   = false
+    # Japanese auto-commit messages (dotfiles commits are written in Japanese).
+    commitMessageTemplateFile = ".commit_message.tmpl"

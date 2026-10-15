@@ -1,0 +1,33 @@
+{{- /*
+Commit message for chezmoi's autoCommit (git.commitMessageTemplateFile).
+Japanese port of chezmoi's default assets/templates/COMMIT_MESSAGE.tmpl:
+one line per changed file, the first line becomes the subject.
+*/ -}}
+{{- with .chezmoi.status }}
+
+{{- range .Ordinary -}}
+{{ $p := .Path | targetRelPath -}}
+{{ if and (hasSuffix "lazy-lock.json" $p) (eq .X 'M') (eq .Y '.') -}}lazy-lock.jsonをローカルのプラグインバージョンに合わせる
+{{ else if and (eq .X 'A') (eq .Y '.') -}}{{ $p }}を追加
+{{ else if and (eq .X 'D') (eq .Y '.') -}}{{ $p }}を削除
+{{ else if and (eq .X 'M') (eq .Y '.') -}}{{ $p }}を更新
+{{ else }}{{ warnf "unsupported XY: %c%c" .X .Y }}
+{{ end }}
+{{- end -}}
+
+{{- range .RenamedOrCopied -}}
+{{ if and (eq .X 'R') (eq .Y '.') }}{{ .Path | targetRelPath }}の属性を変更
+{{ else if and (eq .X 'C') (eq .Y '.') -}}{{ .OrigPath | targetRelPath }}を{{ .Path | targetRelPath }}にコピー
+{{ else }}{{ warnf "unsupported XY: %c%c" .X .Y }}
+{{ end }}
+{{- end -}}
+
+{{- range .Unmerged -}}
+{{ warnf "unmerged files" }}
+{{- end -}}
+
+{{- range .Untracked -}}
+{{ warnf "untracked files" }}
+{{- end -}}
+
+{{- end -}}
