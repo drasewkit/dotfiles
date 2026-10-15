@@ -19,6 +19,7 @@ input="$(cat)"
 printf '%s\n' "$input" | jq '. * {
   theme: "dark",
   effortLevel: "high",
+  language: "japanese",
   agentPushNotifEnabled: true,
   inputNeededNotifEnabled: true,
   enabledPlugins: { "figma@claude-plugins-official": true },
