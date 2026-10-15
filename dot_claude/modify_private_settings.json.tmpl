@@ -18,10 +18,9 @@ input="$(cat)"
 
 printf '%s\n' "$input" | jq '. * {
   theme: "dark",
-  effortLevel: "high",
   language: "japanese",
   agentPushNotifEnabled: true,
   inputNeededNotifEnabled: true,
-  enabledPlugins: { "figma@claude-plugins-official": true },
+  enabledPlugins: { "figma@claude-plugins-official": false },
   permissions: { additionalDirectories: ["{{ .chezmoi.homeDir }}/src/github.com/drasewkit/nb"] }
 }'
