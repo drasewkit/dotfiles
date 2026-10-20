@@ -34,7 +34,8 @@ _zcache starship 'starship init zsh' "$XDG_CONFIG_HOME/starship.toml" "$commands
 
 # 10. Ensure user bin dirs win over Homebrew/path_helper (brew shellenv runs
 #     path_helper, which rebuilds PATH and drops these behind system entries).
-path=($HOME/.local/bin $HOME/bin(N) $path)
+#     Homebrew curl is keg-only, so its bin dir is added here to win over /usr/bin/curl.
+path=($HOME/.local/bin $HOME/bin(N) /opt/homebrew/opt/curl/bin(N) $path)
 
 # 11. Work-local overrides — gitignored, never in the dotfiles repo.
 if [[ -d "$LOCAL_ZSH_DIR" ]]; then
