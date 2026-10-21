@@ -2,6 +2,10 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
+-- `cjk` を足すと日本語などの CJK 文字がスペルチェック対象から外れ、
+-- 英語辞書による赤波線が出なくなる（英語部分のチェックは残る）。
+vim.opt.spelllang = { "en", "cjk" }
+
 -- nvm is lazy-loaded in zsh (see dotfiles rc/pluginconfig/nvm.zsh), so `node`
 -- may be missing from PATH in a shell that hasn't touched node/npm yet. That
 -- silently breaks node-based LSP servers (vtsls, pyright-langserver). Resolve
