@@ -33,4 +33,18 @@ return {
       end, opts.ensure_installed or {})
     end,
   },
+  -- blink.cmp's buffer source treats unspaced Japanese runs as single words
+  -- and keeps popping up past sentences while writing notes (nb), so turn
+  -- completion off for prose filetypes. Keeps blink's default conditions.
+  {
+    "saghen/blink.cmp",
+    optional = true,
+    opts = {
+      enabled = function()
+        return vim.bo.buftype ~= "prompt"
+          and vim.b.completion ~= false
+          and not vim.tbl_contains({ "markdown", "markdown.mdx", "text" }, vim.bo.filetype)
+      end,
+    },
+  },
 }
