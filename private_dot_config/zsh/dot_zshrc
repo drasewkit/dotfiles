@@ -29,6 +29,9 @@ source "$ZRCDIR/pluginconfig/zeno.zsh"
 # 8. Node via nvm — lazy-loaded (see rc/pluginconfig/nvm.zsh).
 source "$ZRCDIR/pluginconfig/nvm.zsh"
 
+# 8b. Runtime versions via mise (Ruby, ...).
+source "$ZRCDIR/pluginconfig/mise.zsh"
+
 # 9. Prompt.
 _zcache starship 'starship init zsh' "$XDG_CONFIG_HOME/starship.toml" "$commands[starship]"
 
